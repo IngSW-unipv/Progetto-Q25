@@ -1,0 +1,64 @@
+Versione iniziale di DB e Appunti generici per Eidos.
+
+1. Tabella Film
+
+Contiene i dettagli dei film disponibili per la programmazione.
+	•	IDFilm (PK, INT, AUTO_INCREMENT): Identificativo univoco del film. (Forse ha senso che la PK sia la fusione di altri attributi)
+	•	Titolo (VARCHAR): Titolo del film.
+	•	Genere (VARCHAR): Genere del film (Inteso come ad es. Azione, Thriller). (Può essere una relazione n-n?)*
+	•	Durata (INT): Durata del film in minuti.
+	•	Sinossi (TEXT): Breve sinossi del film.
+	•	Locandina (BOOLEAN): Il percorso relativo alla locandina del film.
+	•	VM (BOOLEAN): Il film potrebbe essere o non essere vietato ai minori.
+	•	VO (BOOLEAN): Il film potrebbe essere proiettato doppiato oppure in lingua originale.
+
+* La gestione dei Film sembra essere troppo semplificata. Ha senso che oltre al Genere, vengano inseriti anche Regista e Attori, tutti intesi come relazioni n-n.
+
+
+2. Tabella Sale
+
+Memorizza le informazioni relative alle sale del cinema.
+La capacità della sala è data dalla matrice bidimensionale Righe x Colonne.
+Colonne:
+	•	IDSala (PK, INT, AUTO_INCREMENT): Identificativo univoco della sala.
+	•	NomeSala (VARCHAR): Nome o numero della sala.
+	•	numRighe (INT): Numero delle righe di posti (A-Z).
+	•	numColonne (INT): Numero delle colonne di posti disponibili (1-N).
+
+
+3. Tabella Proiezioni
+
+Gestisce la programmazione delle proiezioni dei film.
+Colonne:
+	•	IDProiezione (PK, INT, AUTO_INCREMENT): Identificativo univoco della proiezione.
+	•	IDFilm (FK, INT): Collegamento al film proiettato.
+	•	IDSala (FK, INT): Collegamento alla sala utilizzata.
+	•	Data (DATE): Data della proiezione.
+	•	Orario (TIME): Orario della proiezione.
+	•	PrezzoBiglietto (DECIMAL): Prezzo del biglietto per questa proiezione.
+
+4. Tabella Posti
+
+Tiene traccia dei posti disponibili per ogni sala e proiezione.
+Colonne:
+	•	IDPosto (PK, INT, AUTO_INCREMENT): Identificativo univoco del posto.
+	•	IDSala (FK, INT): Collegamento alla sala.
+	•	NumeroPosto (VARCHAR): Numero o etichetta del posto (es. A1, B3).
+
+5. Tabella Biglietti
+
+Registra le vendite dei biglietti.
+Colonne:
+	•	IDBiglietto (PK, INT, AUTO_INCREMENT): Identificativo univoco del biglietto.
+	•	IDProiezione (FK, INT): Collegamento alla proiezione.
+	•	IDPosto (FK, INT): Collegamento al posto scelto.
+	•	Cliente (VARCHAR): Nome del cliente (opzionale).
+	•	PrezzoPagato (DECIMAL): Prezzo effettivamente pagato.
+
+Relazioni tra le tabelle
+	1.	Film ↔ Proiezioni: Un film può avere più proiezioni, ma ogni proiezione si riferisce a un solo film (1:N).
+	2.	Sale ↔ Proiezioni: Una sala può ospitare molte proiezioni, ma ogni proiezione avviene in una sola sala (1:N).
+	3.	Proiezioni ↔ Biglietti: Ogni proiezione può avere più biglietti venduti, ma ogni biglietto si riferisce a una sola proiezione (1:N).
+	4.	Sale ↔ Posti: Ogni sala ha molti posti, ma ogni posto appartiene a una sola sala (1:N).
+	5.	Posti ↔ Biglietti: Un posto può essere occupato da un solo biglietto per ogni proiezione (1:1 per proiezione).
+
