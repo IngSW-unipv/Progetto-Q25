@@ -62,3 +62,100 @@ Relazioni tra le tabelle
 	4.	Sale ↔ Posti: Ogni sala ha molti posti, ma ogni posto appartiene a una sola sala (1:N).
 	5.	Posti ↔ Biglietti: Un posto può essere occupato da un solo biglietto per ogni proiezione (1:1 per proiezione).
 
+
+
+APPUNTI E ANNOTAZIONI VARIE:
+Possono Biglietti e Posti essere riassunti in un'unica relazione dopo aver modificato la tabella Sala inserendo numero di righe e colonne?
+Attori e Registi sono un'unica entità 'Persone'?
+Il prezzo della proiezione e quello del biglietto possono differire causa eventuali sconti e promozioni
+
+Struttura nuova:
+1. Tabella Movie
+
+Contiene i dettagli dei film disponibili per la programmazione.
+	•	MovieID (PK, INT, AUTO_INCREMENT): Identificativo univoco del film. (Forse ha senso che la PK sia la fusione di altri attributi)
+	•	Title (VARCHAR): Titolo del film.
+	•	Duration (INT): Durata del film in minuti.
+	•	Synopsis (TEXT): Breve sinossi del film.
+	•	ReleaseDate (DATE): Data d'uscita del film.
+	•	posterPath (BOOLEAN): Il percorso relativo alla locandina del film.
+	•	VM (BOOLEAN): Il film potrebbe essere o non essere vietato ai minori.
+	•	VO (BOOLEAN): Il film potrebbe essere proiettato doppiato oppure in lingua originale.
+
+2. Tabella Hall
+
+Memorizza le informazioni relative alle sale del cinema.
+La capacità della sala è data dalla matrice bidimensionale Righe x Colonne.
+Colonne:
+	•	IDHall (PK, INT, AUTO_INCREMENT): Identificativo univoco della sala.
+	•	Name (VARCHAR): Nome o numero della sala.
+	•	Rows (INT): Numero delle righe di posti (A-Z).
+	•	Columns (INT): Numero delle colonne di posti disponibili (1-N).
+
+
+3. Tabella Screening
+
+Gestisce la programmazione delle proiezioni dei film.
+Colonne:
+	•	ScreeningID (PK, INT, AUTO_INCREMENT): Identificativo univoco della proiezione.
+	•	MovieID (FK, INT): Collegamento al film proiettato.
+	•	HallID (FK, INT): Collegamento alla sala utilizzata.
+	•	DateTime (DATETIME): Data e orario della proiezione.
+	•	TicketPrice (DECIMAL): Prezzo del biglietto per questa proiezione.
+
+
+5. Tabella Ticket
+
+Registra le vendite dei biglietti.
+Colonne:
+	•	TicketID (PK, INT, AUTO_INCREMENT): Identificativo univoco del biglietto.
+	•	ScreeningID (FK, INT): Collegamento alla proiezione.
+	•	Row (INT): Numero della fila del posto venduto.
+	•	Column (INT): Numero della colonna del posto venduto.
+	•	paidPrice (DECIMAL): Prezzo effettivamente pagato.
+
+6. Tabella People
+
+Registra le persone che appaiono o lavorano nei film (intese come Attori o Registi).
+Colonne:
+	•	PeopleID (PK, INT, AUTO_INCREMENT): Identificativo univoco della persona.
+	•	Name (VARCHAR): Nome della persona.
+	•	Surname (VARCHAR): Cognome della persona.
+
+7. Tabella Genre
+
+Registra i diversi generi cinematografici.
+Colonne:
+	•	GenreID (PK, INT, AUTO_INCREMENT): Identificativo univoco del genere.
+	•	Name (VARCHAR): Nome del genere.
+
+
+8. Tabella MovieCast
+
+Registra gli Attori in un Film.
+Colonne:
+	•	MovieID (FK, INT): Identificativo univoco del film.
+	•	PeopleID (FK, INT): Identificativo univoco della persona.
+
+
+9. Tabella MovieDirector
+
+Registra i Registi di un Film.
+Colonne:
+	•	MovieID (FK, INT): Identificativo univoco del film.
+	•	PeopleID (FK, INT): Identificativo univoco della persona.
+
+10. Tabella MovieGenre
+
+Registra i generi di un Film.
+Colonne:
+	•	MovieID (FK, INT): Identificativo univoco del film.
+	•	GenreID (FK, INT): Identificativo univoco del genere.
+
+Relazioni tra le tabelle
+	1.	Movie ↔ Screening
+	2.	Hall ↔ Screening
+	3.	Screening ↔ Ticket
+	4.  Movie ↔ MovieGenre ↔ Genre
+	5.  Movie ↔ MovieCast ↔ People
+	6.  Movie ↔ MovieDirector ↔ People
